@@ -173,10 +173,9 @@ async def process_ocr(
 
 if __name__ == "__main__":
     import uvicorn
-    # Render.com ve Railway PORT environment variable'ını verir
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(
-        "app:app",  # String olarak ver (Railway/Render.com best practice)
+        app,
         host="0.0.0.0",
         port=port,
         timeout_keep_alive=300,
