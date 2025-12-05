@@ -23,8 +23,9 @@ ENV POPPLER_PATH=/usr/bin
 COPY app.py .
 COPY ocr.py .
 
-# Port
+# Port (Render.com PORT environment variable'ını kullanacak)
 EXPOSE 8000
 
-# Uygulamayı çalıştır
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Uygulamayı çalıştır (PORT environment variable'ını kullan)
+# Render.com her deploy'da PORT verir, app.py bunu okuyor
+CMD python app.py
