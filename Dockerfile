@@ -1,7 +1,6 @@
-# Python base image
 FROM python:3.11-slim
 
-# Sistem bağımlılıklarını yükle
+# Sistem bağımlılıkları
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-tur \
@@ -9,22 +8,14 @@ RUN apt-get update && apt-get install -y \
     libpoppler-cpp-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Çalışma dizini
 WORKDIR /app
 
-# Python bağımlılıklarını kopyala ve yükle
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# pdf2image'ın poppler yolunu bulması için ENV ekliyoruz
 ENV POPPLER_PATH=/usr/bin
 
-# Tüm proje dosyalarını kopyala
 COPY . .
 
-# Port (Railway ve Render.com PORT environment variable'ını kullanacak)
-EXPOSE 8000
 
-# Uygulamayı çalıştır (PORT environment variable'ını kullan)
-# Railway ve Render.com her deploy'da PORT verir
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
