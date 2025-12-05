@@ -1,6 +1,15 @@
-# OCR Script - Kullanım Kılavuzu
+# OCR API - PDF ve Görüntü OCR Servisi
 
-Bu script PDF ve görüntü dosyalarından OCR (Optical Character Recognition) ile metin çıkarır.
+Bu proje PDF ve görüntü dosyalarından OCR (Optical Character Recognition) ile metin çıkaran bir REST API servisidir. Render.com'da deploy edilebilir ve n8n gibi otomasyon araçlarından kullanılabilir.
+
+## Özellikler
+
+- ✅ PDF ve görüntü dosyalarından OCR
+- ✅ REST API (FastAPI)
+- ✅ Docker desteği
+- ✅ Render.com deployment hazır
+- ✅ n8n entegrasyonu için uygun
+- ✅ Türkçe ve İngilizce dil desteği
 
 ## Kurulum
 
@@ -125,4 +134,151 @@ Her sayfa için:
 - OCR edilen metin
 
 içerir.
+
+---
+
+## 🌐 API Kullanımı (Render.com Deployment)
+
+### Render.com'da Deploy Etme
+
+1. **GitHub'a push edin:**
+   ```bash
+   git add .
+   git commit -m "Add API and Docker support"
+   git push origin main
+   ```
+
+2. **Render.com'da yeni servis oluşturun:**
+   - Render.com dashboard'a gidin
+   - "New +" → "Web Service" seçin
+   - GitHub repo'nuzu bağlayın
+   - **Environment:** Docker
+   - **Dockerfile Path:** `./Dockerfile`
+   - **Start Command:** (otomatik algılanır)
+   - Deploy edin!
+
+3. **API URL'inizi alın:**
+   - Render.com size bir URL verecek: `https://your-app.onrender.com`
+
+### API Endpoints
+
+#### `GET /`
+API bilgileri
+
+#### `GET /health`
+Sağlık kontrolü
+
+#### `POST /ocr`
+Dosya yükleyip OCR yap
+
+**Request:**
+- Method: `POST`
+- Content-Type: `multipart/form-data`
+- Body:
+  - `file`: (file) Yüklenecek dosya
+  - `lang`: (optional, default: "tur+eng") OCR dili
+  - `dpi`: (optional, default: 300) PDF için DPI
+
+**Response:**
+```json
+{
+  "success": true,
+  "filename": "document.pdf",
+  "text": "OCR edilen metin...",
+  "character_count": 1234,
+  "page_count": 5,
+  "language": "tur+eng"
+}
+```
+
+### cURL Örneği
+
+```bash
+curl -X POST "https://your-app.onrender.com/ocr" \
+  -F "file=@document.pdf" \
+  -F "lang=tur+eng" \
+  -F "dpi=300"
+```
+
+### Python Örneği
+
+```python
+import requests
+
+url = "https://your-app.onrender.com/ocr"
+files = {"file": open("document.pdf", "rb")}
+data = {"lang": "tur+eng", "dpi": 300}
+
+response = requests.post(url, files=files, data=data)
+result = response.json()
+
+print(result["text"])
+print(f"Karakter sayısı: {result['character_count']}")
+```
+
+### n8n Kullanımı
+
+n8n'de HTTP Request node'u kullanarak:
+
+1. **HTTP Request Node ekleyin:**
+   - Method: `POST`
+   - URL: `https://your-app.onrender.com/ocr`
+   - Authentication: None
+   - Body Type: `Multipart-Form-Data`
+   - Parameters:
+     - `file`: (File) Dosya
+     - `lang`: `tur+eng` (optional)
+     - `dpi`: `300` (optional)
+
+2. **Response'u kullanın:**
+   - `{{ $json.text }}` - OCR edilen metin
+   - `{{ $json.character_count }}` - Karakter sayısı
+   - `{{ $json.page_count }}` - Sayfa sayısı
+
+### JavaScript/Node.js Örneği
+
+```javascript
+const FormData = require('form-data');
+const fs = require('fs');
+const axios = require('axios');
+
+const form = new FormData();
+form.append('file', fs.createReadStream('document.pdf'));
+form.append('lang', 'tur+eng');
+form.append('dpi', '300');
+
+axios.post('https://your-app.onrender.com/ocr', form, {
+  headers: form.getHeaders()
+})
+.then(response => {
+  console.log(response.data.text);
+})
+.catch(error => {
+  console.error(error);
+});
+```
+
+---
+
+## 🐳 Docker ile Lokal Test
+
+```bash
+# Docker image oluştur
+docker build -t ocr-api .
+
+# Container çalıştır
+docker run -p 8000:8000 ocr-api
+
+# API'yi test et
+curl -X POST "http://localhost:8000/ocr" \
+  -F "file=@test.pdf"
+```
+
+---
+
+## 📝 Notlar
+
+- API timeout'ları için Render.com'da planınızı kontrol edin
+- Büyük PDF'ler için işlem süresi uzayabilir
+- n8n'de timeout ayarlarını artırmanız gerekebilir
 

@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+ocr_sonuc.txt
+*.pdf
+.git/
+.gitignore
+README.md
+.DS_Store
+*.md
+
