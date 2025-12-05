@@ -19,12 +19,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # pdf2image'ın poppler yolunu bulması için ENV ekliyoruz
 ENV POPPLER_PATH=/usr/bin
 
-# Uygulama dosyalarını kopyala
-COPY app.py .
-COPY ocr.py .
+# Tüm proje dosyalarını kopyala
+COPY . .
 
-# Port
-EXPOSE 8000
+# Railway’in verdiği PORT değerini kullan
+ENV PORT=$PORT
 
-# Uygulamayı çalıştır
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Railway için doğru startup komutu
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
