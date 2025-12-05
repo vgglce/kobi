@@ -16,11 +16,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Uygulama dosyalarını kopyala
-COPY . .
-
 # pdf2image'ın poppler yolunu bulması için ENV ekliyoruz
 ENV POPPLER_PATH=/usr/bin
+
+# Uygulama dosyalarını kopyala
+COPY app.py .
+COPY ocr.py .
 
 # Port
 EXPOSE 8000
