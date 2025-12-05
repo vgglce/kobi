@@ -12,7 +12,6 @@ __pycache__/
 
 # OCR Output
 ocr_sonuc.txt
-*.txt
 
 # PDF files (örnek dosyalar)
 *.pdf
