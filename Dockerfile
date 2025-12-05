@@ -2,12 +2,11 @@
 FROM python:3.11-slim
 
 # Sistem bağımlılıklarını yükle
-RUN apt-get update && apt-get install -y \
-    tesseract-ocr \
-    tesseract-ocr-tur \
-    poppler-utils \
-    libpoppler-cpp-dev \
-    && rm -rf /var/lib/apt/lists/*
+COPY apt.txt /tmp/apt.txt
+RUN apt-get update && \
+    xargs -a /tmp/apt.txt apt-get install -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm /tmp/apt.txt
 
 # Çalışma dizini
 WORKDIR /app
