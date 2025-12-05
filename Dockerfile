@@ -22,8 +22,9 @@ ENV POPPLER_PATH=/usr/bin
 # Tüm proje dosyalarını kopyala
 COPY . .
 
-# Railway’in verdiği PORT değerini kullan
-ENV PORT=$PORT
+# Port (Railway ve Render.com PORT environment variable'ını kullanacak)
+EXPOSE 8000
 
-# Railway için doğru startup komutu
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
+# Uygulamayı çalıştır (PORT environment variable'ını kullan)
+# Railway ve Render.com her deploy'da PORT verir
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
